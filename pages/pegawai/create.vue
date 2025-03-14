@@ -220,6 +220,7 @@
   export default {
     data() {
       return {
+        users: [],
         form: {
           nip: '',            
           nama: '',           
@@ -248,20 +249,29 @@
         await this.fetchpegawai(id); 
       }
       await this.fetchUsers();
-      await this.fetchUnits(); // Tambahkan ini untuk memastikan data pengguna diambil
+      await this.fetchUnits(); 
+    },
+
+    computed: {
+    selectedUser() {
+        return this.users.find(user => user.id === this.form.user_id);
+      }
+    },
+    mounted() {
+      this.fetchUsers();
     },
 
     methods: {
-      // Method to retrieve token from localStorage
+
       getAuthToken() {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+        const token = localStorage.getItem('token'); 
         if (!token) {
           console.log('Token tidak ditemukan, silakan login');
           this.errorMessage = 'Token tidak ditemukan, silakan login';
-          this.$router.push('/login'); // Redirect to login page if token is missing
-          return null; // Return null if token is not found
+          this.$router.push('/login'); 
+          return null;
         }
-        return token; // Return the token if found
+        return token;
       },
       async fetchUsers() {
         try {
@@ -272,12 +282,28 @@
             headers: { Authorization: `Bearer ${token}` }
           });
 
-          this.users = response.data || []; // Simpan data pengguna
+          this.users = response.data || []; 
         } catch (error) {
           this.errorMessage = 'Error fetching users: ' + (error.response?.data?.message || error.message);
           console.error('Error fetching users:', error);
         }
       },
+
+      async fetchUsedUsers() {
+        try {
+          const token = this.getAuthToken();
+          if (!token) return;
+
+          const response = await this.$axios.get('/pegawai', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+
+          this.usedUserIds = response.data.map(pegawai => pegawai.user_id);
+        } catch (error) {
+          console.error('Error fetching used users:', error);
+        }
+      },
+
 
       async fetchUnits() {
         try {
@@ -288,7 +314,7 @@
             headers: { Authorization: `Bearer ${token}` }
           });
 
-          this.units = response.data || []; // Menyimpan data unit kerja
+          this.units = response.data || []; 
         } catch (error) {
           this.errorMessage = 'Error fetching units: ' + (error.response?.data?.message || error.message);
           console.error('Error fetching units:', error);
@@ -299,9 +325,9 @@
         const token = this.getAuthToken();
 
         
-        const file = event.target.files[0]; // Get the first file from the input
+        const file = event.target.files[0]; 
         if (file) {
-          this.form.image = file; // Store the selected file in the form object
+          this.form.image = file;
         }
       },
 
@@ -311,14 +337,14 @@
           if (!token) return;
 
           const formData = new FormData();
-          // Menambahkan data form ke FormData
+          
           Object.keys(this.form).forEach((key) => {
             if (this.form[key] !== null) {
               formData.append(key, this.form[key]);
             }
           });
 
-          // Jika ada gambar, tambahkan gambar ke FormData
+          
           if (this.form.image) {
             formData.append('image', this.form.image);
           }
@@ -327,24 +353,24 @@
           let response;
 
           if (id) {
-            // Jika ada ID, lakukan update (menggunakan PUT)
+         
             response = await this.$axios.put(`/pegawai/${id}`, formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data', // Menyertakan header untuk multipart/form-data
+                'Content-Type': 'multipart/form-data', 
               },
             });
           } else {
-            // Jika tidak ada ID, lakukan penambahan data baru (menggunakan POST)
+
             response = await this.$axios.post('/pegawai', formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data', // Menyertakan header untuk multipart/form-data
+                'Content-Type': 'multipart/form-data', 
               },
             });
           }
 
-          // Jika berhasil, arahkan ke halaman pegawai
+
           this.$router.push('/pegawai');
         } catch (error) {
           console.error('Terjadi kesalahan saat mengirimkan form:', error);

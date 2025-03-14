@@ -1,4 +1,6 @@
 <template>
+  <div>
+    <Navbar />
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
       <div class="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 class="text-xl font-bold mb-6">Edit Unit Kerja</h2>
@@ -38,6 +40,9 @@
         </form>
       </div>
     </div>
+    <Footer/>
+  </div>
+
   </template>
   
   <script>
@@ -50,29 +55,28 @@
           nama_unit_kerja: '',
           alamat_unit_kerja: ''
         },
-        errorMessage: '' // To store error message if any
+        errorMessage: '' 
       };
     },
     async created() {
-      const unitId = this.$route.params.id; // Get the ID from the route parameters
+      const unitId = this.$route.params.id; 
       if (unitId) {
-        await this.fetchUnitKerja(unitId); // Fetch data for the specific unit kerja
+        await this.fetchUnitKerja(unitId); 
       }
     },
     methods: {
-      // Method to retrieve token from localStorage
       getAuthToken() {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+        const token = localStorage.getItem('token');
         if (!token) {
           console.log('Token tidak ditemukan, silakan login');
           this.errorMessage = 'Token tidak ditemukan, silakan login';
-          this.$router.push('/login'); // Redirect to login page if token is missing
-          return null; // Return null if token is not found
+          this.$router.push('/login'); 
+          return null; 
         }
-        return token; // Return the token if found
+        return token; 
       },
   
-      // Fetch the unit kerja data by ID for editing
+
       async fetchUnitKerja(unitId) {
         try {
           const token = this.getAuthToken();
@@ -82,7 +86,6 @@
             headers: { Authorization: `Bearer ${token}` }
           });
           
-          // Populate the form with the fetched data
           this.form.nama_unit_kerja = response.data.nama_unit_kerja;
           this.form.alamat_unit_kerja = response.data.alamat_unit_kerja;
         } catch (error) {
@@ -91,23 +94,21 @@
         }
       },
   
-      // Submit form method to update the unit kerja
+
       async submitForm() {
         try {
           const token = this.getAuthToken();
           if (!token) return;
   
-          const unitId = this.$route.params.id; // Get the ID from the route parameters
-  
-          // Check if it's an edit or a new creation
-          const method = unitId ? 'put' : 'post'; // Use PUT for update
+          const unitId = this.$route.params.id; 
+          const method = unitId ? 'put' : 'post'; 
           const url = unitId ? `/unitkerja/${unitId}` : '/unitkerja';
   
           const response = await this.$axios[method](url, this.form, {
             headers: { Authorization: `Bearer ${token}` }
           });
   
-          // Redirect after successful submission
+
           this.$router.push('/unit-kerja');
         } catch (error) {
           console.error('Error submitting form:', error);

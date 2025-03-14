@@ -1,8 +1,5 @@
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-
-  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'nuxt-pns',
     htmlAttrs: {
@@ -19,35 +16,30 @@ export default {
     ]
   },
 
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+  
   buildModules: [
-    '@nuxtjs/tailwindcss', // Tailwind CSS untuk Nuxt 2
+    '@nuxtjs/tailwindcss', 
   ],
   css: [
-    // '@/assets/css/tailwind.css',  // Jika Anda punya file custom tailwind.css
+    
   ],
 
   router: {
-    middleware: ['auth']  // Pastikan ada koma di sini jika ada properti lain setelahnya
+    middleware: ['auth']  
   },
 
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt'],
   axios: {
-    baseURL: 'http://127.0.0.1:8000/api', // ganti dengan URL API Laravel kamu
+    baseURL: 'http://127.0.0.1:8000/api', 
     credentials: true,
   },
 
-  
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     splitChunks: {
       layouts: true,

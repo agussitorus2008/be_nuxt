@@ -1,4 +1,6 @@
 <template>
+  <div>
+    <Navbar />
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
       <div class="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 class="text-xl font-bold mb-6">Tambah Unit Kerja</h2>
@@ -38,54 +40,52 @@
         </form>
       </div>
     </div>
+    <Footer/>
+  </div>
+
   </template>
   
   <script>
   import axios from 'axios';
   
   export default {
+
     data() {
       return {
         form: {
           nama_unit_kerja: '',
           alamat_unit_kerja: ''
         },
-        errorMessage: '' // To store error message if any
+        errorMessage: '' 
       };
     },
     methods: {
 
       
-      // Method to retrieve token from localStorage
+
       getAuthToken() {
-        const token = localStorage.getItem('token');  // Retrieve token from localStorage
+        const token = localStorage.getItem('token');  
         if (!token) {
           console.log('Token tidak ditemukan, silakan login');
           this.errorMessage = 'Token tidak ditemukan, silakan login';
-          this.$router.push('/login'); // Redirect to login page if token is missing
-          return null; // Return null if token is not found
+          this.$router.push('/login'); 
+          return null; 
         }
-        return token; // Return the token if found
+        return token; 
       },
   
-      // Submit form method to add unit kerja
+
       async submitForm() {
         try {
-          // Ambil token otentikasi
+          
           const token = this.getAuthToken();
-
-          // Jika token tidak ada, hentikan proses
           if (!token) return;
-
-          // Lakukan request untuk menambahkan unit kerja
           const response = await this.$axios.post('/unitkerja', this.form, {
             headers: { Authorization: `Bearer ${token}` }
           });
 
-          // Jika berhasil, arahkan ke halaman unit kerja
           this.$router.push('/unit-kerja');
         } catch (error) {
-          // Tangani error jika ada
           console.error('Error adding unit kerja:', error);
           this.errorMessage = 'Terjadi kesalahan saat menambahkan unit kerja. Silakan coba lagi.';
         }

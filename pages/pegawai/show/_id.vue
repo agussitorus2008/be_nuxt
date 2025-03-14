@@ -2,7 +2,7 @@
   <div class="container mx-auto p-4">
     <h1 class="text-3xl font-bold mb-6">Detail Pegawai</h1>
 
-    <!-- Tabel untuk menampilkan detail pegawai -->
+
     <div class="bg-white p-6 rounded-md shadow-md">
       <table class="table-auto w-full border-collapse">
         <thead>
@@ -13,7 +13,7 @@
           
         </thead>
         <tbody>
-          <!-- Rows for each field -->
+
           <tr>
             <td class="px-4 py-2 font-semibold border">NIP</td>
             <td class="px-4 py-2 border">{{ pegawai.nip }}</td>
@@ -87,7 +87,7 @@
         </tbody>
       </table>
 
-      <!-- Button to go back -->
+
       <div class="mt-6">
         <nuxt-link to="/pegawai" class="bg-blue-500 text-white px-4 py-2 rounded">Kembali</nuxt-link>
       </div>
@@ -100,18 +100,18 @@ export default {
   data() {
 
     return {
-      pegawai: {}, // Data pegawai
-      users: [], // Data users
-      errorMessage: '' // Pesan error
+      pegawai: {}, 
+      users: [], 
+      errorMessage: '' 
     };
   },
   async mounted() {
-    const pegawaiId = this.$route.params.id; // ID pegawai dari URL
-    await this.fetchPegawai(pegawaiId); // Ambil data pegawai berdasarkan ID
-    await this.fetchUsers(); // Ambil data pengguna setelah pegawai dimuat
+    const pegawaiId = this.$route.params.id;
+    await this.fetchPegawai(pegawaiId);
+    await this.fetchUsers();
   },
   methods: {
-    // Helper function untuk mendapatkan token dari localStorage
+    
     getAuthToken() {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -121,11 +121,11 @@ export default {
       return token;
     },
     getImageUrl(imagePath) {
-      // Pastikan imagePath sesuai dengan path relatif yang disimpan di backend
+      
       return `http://127.0.0.1:8000/storage/${imagePath}`;
     },
 
-    // Mengambil data pegawai berdasarkan ID
+   
     async fetchPegawai(id) {
       try {
         const token = this.getAuthToken();
@@ -135,15 +135,15 @@ export default {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        this.pegawai = response.data; // Menyimpan data pegawai
+        this.pegawai = response.data; 
         
-        // Periksa data yang diterima
-        console.log('Data Pegawai:', this.pegawai); // Cek data pegawai
-        console.log('User Data:', this.pegawai.user); // Cek data user
 
-        // Jika data pegawai mengandung user id, ambil data pengguna
+        console.log('Data Pegawai:', this.pegawai); 
+        console.log('User Data:', this.pegawai.user); 
+
+
         if (this.pegawai.user?.id) {
-          await this.fetchUsers(); // Ambil data pengguna setelah pegawai dimuat
+          await this.fetchUsers();
         }
       } catch (error) {
         this.errorMessage = 'Error fetching pegawai: ' + (error.response?.data?.message || error.message);
@@ -151,8 +151,6 @@ export default {
       }
     },
 
-
-    // Mengambil data pengguna
     async fetchUsers(userId) {
       try {
         const token = this.getAuthToken();
